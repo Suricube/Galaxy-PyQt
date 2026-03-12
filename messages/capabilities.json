@@ -1,0 +1,8 @@
+{
+    "type":"system",
+    "name":"",
+    "payload":{
+        "cmd":"getcapabilities",
+        "properties": {}
+    }
+}
