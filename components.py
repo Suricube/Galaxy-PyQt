@@ -10,10 +10,10 @@ from PyQt6.QtWidgets import QSizePolicy
 from PyQt6.QtCore import Qt
 
 class Component(QWidget):
-    def __init__(self, name, value, mqttclient):
+    def __init__(self, name, value, publish):
         super().__init__()
         
-        self.client = mqttclient
+        self.publish = publish
         self.name = name
 
         #mainlayout
@@ -87,7 +87,7 @@ class Component(QWidget):
 #        payload = json.dumps({"name": self.name, "value": msg})
         print(f"send: {msg}")
         loop = asyncio.get_event_loop()
-        loop.create_task(self.client.publish("ui", msg))
+        loop.create_task(self.publish("ui", msg))
    
 
 #class ComponentAO(Component):

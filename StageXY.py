@@ -8,10 +8,6 @@ from pydantic import BaseModel
 from components import Component
 from PyQt6.QtGui import QColor
 
-        
-
-
-
 class StageXY(Component):
     def __init__(self,name,  value, mqttclient):
         super().__init__(name,  value, mqttclient)
@@ -37,8 +33,6 @@ class StageXY(Component):
         self.x_value = QLineEdit()
         self.y_value = QLineEdit()
         self.stop_button = QPushButton("stop")
-
-
         
         #add Layouts
         self.panel_layout.addLayout(self.first_collumn)

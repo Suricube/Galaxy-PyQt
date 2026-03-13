@@ -10,7 +10,7 @@ class URL(BaseModel):
     @staticmethod
     def get_github_tree(url: str) -> dict:
         headers = {
-        "Authorization": "token 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"
+        "Author ization": "to ken git_LH_hub_pat_11AD5TBQQ_LH_0iYXcaL0adMVE_Wvzo9hQK3PvPnjGZXteaJ6hoqkO_LH_KUAVdspml72iQe5cDIOGGXFZ1PH7Iq8Y"
         }
         response = requests.get(url, headers=headers)
         data = response.json()
