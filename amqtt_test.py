@@ -29,15 +29,19 @@ class SocketMqtt(SocketC):
         super().__init__(ip=ip, port=port, process=process)
         self.client = MQTTClient(config={"auto_reconnect": False})
     async def connect(self):
-        await self.client.connect("mqtt://localhost:1883")
+        await self.client.connect('mqtt://127.0.0.1:1883/')
+#        await self.client.connect(f"mqtt://{self.ip}:{self.port}/")
 
         await self.client.subscribe(
             [
-                ("$SYS/broker/uptime", QOS_1),
-                ("python", QOS_1),
+                ("mock", QOS_1),
             ],
         )
-        await self.send("ui","test message")
+        file = open("messages/capabilities.json","r")
+        msg = file.read()
+        file.close()
+        await self.send("ui",msg)
+        #await self.send("ui","test message")
         logger.info("Subscribed")
         try:
             for _i in range(1, 10):
@@ -54,12 +58,12 @@ class SocketMqtt(SocketC):
         await self.client.publish('ui', msg.encode(), qos=QOS_1)
 
 
-""" def __main__():
+def __main__():
     formatter = "[%(asctime)s] {%(filename)s:%(lineno)d} %(levelname)s - %(message)s"
     logging.basicConfig(level=logging.INFO, format=formatter)
-    comps = Comps()
-    client = SocketMqtt(ip="localhost",port=1883, process=comps)
+    #comps = Comps()
+    client = SocketMqtt(ip="localhost",port=1883, process="comps")
     asyncio.run(client.connect())
 
 if __name__ == "__main__":
-    __main__() """
+    __main__()
