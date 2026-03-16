@@ -1,0 +1,20 @@
+{
+  "type": "manager",
+  "name": "notneeded",
+  "timestamp": "2025-12-31T23:59:60Z",
+  "payload": {
+    "cmd": "component_launch",
+    "properties": {
+      "actor_name_id": "stage",
+      "wasmfile_path": {
+        "from_url": {
+          "wasm_url": "https://api.github.com/repos/Suricube/Galaxy-Components/git/blobs/4e50ac6615eda16c7437927d5937a694fcfca3c0",
+          "config_url": "https://api.github.com/repos/Suricube/Galaxy-Components/git/blobs/37880ed813ec842b8827b67c8128ba814b0056d2"
+        }
+      },
+      "msg_id": "unique id",
+      "reply_req": null,
+      "meta": {}
+    }
+  }
+}
