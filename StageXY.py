@@ -161,14 +161,14 @@ class StageXY(Component):
             ]
         }
         print(message)
-        asyncio.ensure_future(self.client.publish("ui", json.dumps(message)))
+        self.send_msg(json.dumps(message))
 
     def stop_button_callback(self):
         msg = {
             "cmd": "stop",
             "properties": {}
         }
-        asyncio.ensure_future(self.client.publish("ui", json.dumps(msg)))
+        self.send_msg(json.dumps(msg))
     
     def line_edit_return(self, value, name):
         match name:
@@ -181,7 +181,7 @@ class StageXY(Component):
                     {"name": "x","value": value},
                     ]
                 }
-                asyncio.ensure_future(self.client.publish("ui", json.dumps(msg_x)))
+                self.send_msg(json.dumps(msg_x))
             case "y":
                 if "red" in self.y_value.styleSheet():
                     return
@@ -191,7 +191,7 @@ class StageXY(Component):
                     {"name": "x","value": value},
                     ]
                 }
-                asyncio.ensure_future(self.client.publish("ui", json.dumps(msg_y)))
+                self.send_msg(json.dumps(msg_y))
  
 class Range(BaseModel):
     min: float

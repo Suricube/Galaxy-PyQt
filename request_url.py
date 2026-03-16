@@ -4,13 +4,12 @@ from pydantic import BaseModel
 import json
 
 class URL(BaseModel):
-
+    token: str = ""
     tree_dict: dict = {}
     
-    @staticmethod
-    def get_github_tree(url: str) -> dict:
+    def get_github_tree(self, url: str) -> dict:
         headers = {
-        "Author ization": "to ken git_LH_hub_pat_11AD5TBQQ_LH_0iYXcaL0adMVE_Wvzo9hQK3PvPnjGZXteaJ6hoqkO_LH_KUAVdspml72iQe5cDIOGGXFZ1PH7Iq8Y"
+        "Authorization": self.token
         }
         response = requests.get(url, headers=headers)
         data = response.json()
@@ -22,7 +21,13 @@ class URL(BaseModel):
                 self.tree_dict[item["path"]] = item["url"] 
         return self.tree_dict
 
-    
+    def set_token(self):
+        f = open("assets/token.json")
+        data = f.read()
+        f.close()
+        self.token = json.loads(data).get("Authorization")
+
+
 
 
 def main():

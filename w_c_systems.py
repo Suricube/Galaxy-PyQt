@@ -26,7 +26,8 @@ class SytemsClass(QWidget):
         
         #create line edits and add to layout
         url = request_url.URL()
-        tree = url.get_github_tree("https://api.github.com/repos/Suricube/Galaxy-Components/git/trees/main?recursive=1")
+        url.set_token()
+        tree = url.get_github_tree(url="https://api.github.com/repos/Suricube/Galaxy-Components/git/trees/main?recursive=1")
         blobs: dict = url.get_blobs(tree)
         self.blobs = blobs
 

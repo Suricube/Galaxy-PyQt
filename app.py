@@ -18,7 +18,9 @@ import amqtt_test
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("EMQX")
+        self.resize(1200, 700)
+        #self.setWindowFlags(Qt.WindowType.FramelessWindowHint)
+        self.setWindowTitle("Galaxy Controller")
 
         #Layouts
         main_layout = QVBoxLayout()

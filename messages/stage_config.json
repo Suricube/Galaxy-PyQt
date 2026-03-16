@@ -1,0 +1,21 @@
+{
+    "type":"component",
+    "name":"stage",
+    "payload":{
+        "cmd":"config",
+        "properties": [
+            {
+                "name":"x",
+                "pos":{"value":0,"min":-100,"max":100,"step":0.1},
+                "speed":{"value":0,"min":-100,"max":100,"step":0.1},
+                "status":"idle"
+            },
+            {
+                "name":"y",
+                "pos":{"value":0,"min":-100,"max":100,"step":0.1},
+                "speed":{"value":0,"min":-100,"max":100,"step":0.1},
+                "status":"idle"
+            }
+        ]
+    }
+}
