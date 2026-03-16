@@ -54,7 +54,7 @@ class SocketMqtt(SocketC):
         await self.client.publish('ui', msg.encode(), qos=QOS_1)
 
 
-def __main__():
+""" def __main__():
     formatter = "[%(asctime)s] {%(filename)s:%(lineno)d} %(levelname)s - %(message)s"
     logging.basicConfig(level=logging.INFO, format=formatter)
     comps = Comps()
@@ -62,4 +62,4 @@ def __main__():
     asyncio.run(client.connect())
 
 if __name__ == "__main__":
-    __main__()
+    __main__() """

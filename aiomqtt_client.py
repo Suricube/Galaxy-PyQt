@@ -20,10 +20,10 @@ async def start_mqtt(self):
             print(f"Empfangen: {message.payload.decode()}")
             payload = message.payload.decode()
             topic = message.topic.value
-            QTimer.singleShot(
+"""             QTimer.singleShot(
                 0,
                 lambda p=payload, t=topic: self.incoming_message(t,p)
-            )
+            ) """
  
 async def publish_message(self, message: dict, name: str):
     #message = line_edit.text()
