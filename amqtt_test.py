@@ -44,15 +44,17 @@ class SocketMqtt(SocketC):
         #await self.send("ui","test message")
         logger.info("Subscribed")
         try:
-            for _i in range(1, 10):
+            while True:
                 if msg := await self.client.deliver_message():
                     logger.info(f"{msg.topic} >> {msg.data.decode()}")
                     self.process.process(msg.data.decode())
-            await self.client.unsubscribe(["$SYS/broker/uptime", "$SYS/broker/load/#"])
-            logger.info("UnSubscribed")
-            await self.client.disconnect()
+
         except ClientError:
             logger.exception("Client exception")
+            await self.client.unsubscribe(["mock"])
+            logger.info("UnSubscribed")
+            await self.client.disconnect()
+
     async def send(self, topic:str, msg: str):
         print(msg)
         await self.client.publish('ui', msg.encode(), qos=QOS_1)

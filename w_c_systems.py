@@ -90,7 +90,7 @@ class SytemsClass(QWidget):
         self.settings_button.clicked.connect(self.toggle_settings)
 
         #get config button 
-        self.get_capabilities = QPushButton("get config")
+        self.get_capabilities = QPushButton("get capabilities")
         self.get_capabilities.clicked.connect(self.get_capabilities_clicked)
         self.second_panel_layout_settings.addWidget(self.get_capabilities)
 
