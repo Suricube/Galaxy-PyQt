@@ -1,0 +1,7 @@
+{ "type":"component",
+            "name": "",
+            "payload":{
+            "cmd":"getcapabilities",
+            "properties": {}
+            }
+        }

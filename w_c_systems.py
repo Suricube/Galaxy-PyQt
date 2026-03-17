@@ -77,6 +77,7 @@ class SytemsClass(QWidget):
 
         #actor name id line edit
         self.actor_name_id = QLineEdit()
+        self.actor_name_id.setPlaceholderText("enter actor name id")
         self.second_panel_layout_settings.addWidget(self.actor_name_id)
 
         #button for applying systems
@@ -84,8 +85,22 @@ class SytemsClass(QWidget):
         self.apply_systems.clicked.connect(self.apply_systems_button)
         self.second_panel_layout_settings.addWidget(self.apply_systems)
 
-        
+        #settings button
+        self.settings_button = QPushButton("→ settings")
+        self.settings_button.clicked.connect(self.toggle_settings)
 
+        #get config button 
+        self.get_capabilities = QPushButton("get config")
+        self.get_capabilities.clicked.connect(self.get_capabilities_clicked)
+        self.second_panel_layout_settings.addWidget(self.get_capabilities)
+
+
+    def get_capabilities_clicked(self):
+        with open("assets/get_capabilities.json", "r") as f:
+            msg = json.loads(f.read())
+            f.close()
+            msg["name"] = "systems"
+        self.send(json.dumps(msg))
 
     def return_pressed_wasm(self):
         sender = self.sender()  #which line edit was pressed 
@@ -127,6 +142,8 @@ class SytemsClass(QWidget):
         self.scroll_area_config.setWidget(self.scroll_area_config_content)
         self.scroll_area_config_content.adjustSize()
 
+        
+
     def return_pressed_config(self):
         sender = self.sender()
         self.config_selected = sender.text()
@@ -158,14 +175,25 @@ class SytemsClass(QWidget):
         else:
             print("config or wasm selected is empty")
             return
-        if self.actor_name_id:
+        if self.actor_name_id.text():
             msg["payload"]["properties"]["actor_name_id"] = self.actor_name_id.text()
+            self.actor_name_id.setStyleSheet("")
         else:
-            print("name id is empty")
+            self.actor_name_id.setStyleSheet("QLineEdit { border: 2px solid red; border-radius: 3px; }")
             return
+        
         #self.msg_to_apply = msg
+        self.actor_name_id.clear()
         self.send(str(msg))
 
     def send(self, msg: str):
         loop = asyncio.get_event_loop()
         loop.create_task(self.publish("ui", msg))
+
+    def toggle_settings(self):
+        visible = self.panel_settings.isVisible()
+        self.panel_settings.setVisible(not visible)
+        if visible:
+            self.settings_button.setText("→ settings")
+        else:
+            self.settings_button.setText("↓ settings")

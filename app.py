@@ -45,20 +45,15 @@ class MainWindow(QMainWindow):
         container.setLayout(main_layout)
         self.setCentralWidget(container)
 
-        #top bar
-        self.top_bar_connect = QPushButton("connect")
-        top_bar_layout.addWidget(self.top_bar_connect)
-        self.settings_button = QPushButton("→ settings")
-        self.settings_button.clicked.connect(self.toggle_settings)
-        top_bar_layout.addWidget(self.settings_button)
-
-        
-        
-        
-        
+    
         # add to panel layout settings
         self.systems = SytemsClass(self.publish)
         main_layout.insertWidget(1, self.systems.panel_settings)
+
+        #top bar
+        self.top_bar_connect = QPushButton("connect")
+        top_bar_layout.addWidget(self.top_bar_connect)
+        top_bar_layout.addWidget(self.systems.settings_button)
         
         
         #Widgets
@@ -73,13 +68,10 @@ class MainWindow(QMainWindow):
         self.dynamic_widgets = {}           #all line_edits for section
         self.dynamic_buttons = {}           #all buttons for section
 
-        # drop down pannel
-        self.toggle_button = QPushButton("→ send messages")
-        self.toggle_button.clicked.connect(self.toggle_panel)
+        # component area
         self.panel = QWidget()
         self.panel_layout = QVBoxLayout()
         self.panel.setLayout(self.panel_layout) 
-        self.panel.setVisible(False)
         self.panel.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Expanding) 
         self.panel_layout.setAlignment(Qt.AlignmentFlag.AlignTop)
 
@@ -97,30 +89,13 @@ class MainWindow(QMainWindow):
         
         #add Widgets to layout
         left_main_layout.addWidget(self.status_label)
-        left_main_layout.addWidget(self.toggle_button)
         left_main_layout.addWidget(self.panel)
         right_main_layout.addWidget(self.errror_widget)
         right_main_layout.addWidget(self.recieve_widget)
         left_main_layout.addStretch()       #layout formatierung
         right_main_layout.addStretch() 
 
-
-    def toggle_panel(self):
-        visible = self.panel.isVisible()
-        self.panel.setVisible(not visible)
-        if visible:
-            self.toggle_button.setText("→ send messages")
-        else:
-            self.toggle_button.setText("↓ send messages")
-
-    def toggle_settings(self):
-        visible = self.systems.panel_settings.isVisible()
-        self.systems.panel_settings.setVisible(not visible)
-        if visible:
-            self.settings_button.setText("→ settings")
-        else:
-            self.settings_button.setText("↓ settings")
-
+    
     def on_send_clicked(self, line_edit, name):
         loop = asyncio.get_event_loop()
         loop.create_task(self.publish_message(line_edit, name))
