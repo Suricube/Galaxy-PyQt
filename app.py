@@ -16,12 +16,12 @@ import component_handler
 import amqtt_test
 
 class MainWindow(QMainWindow):
-    def __init__(self):
+    def __init__(self, publish):
         super().__init__()
         self.resize(1200, 700)
         #self.setWindowFlags(Qt.WindowType.FramelessWindowHint)
         self.setWindowTitle("Galaxy Controller")
-
+        self.publish = publish
         #Layouts
         main_layout = QVBoxLayout()
         main_second_layout = QHBoxLayout()
@@ -52,20 +52,14 @@ class MainWindow(QMainWindow):
         self.settings_button.clicked.connect(self.toggle_settings)
         top_bar_layout.addWidget(self.settings_button)
 
-        #drop down panel for settings
-        self.panel_settings = QWidget()
-        self.panel_layout_settings = QVBoxLayout()
-        self.second_panel_layout_settings = QHBoxLayout()
-        self.panel_layout_settings.addLayout(self.second_panel_layout_settings)
-        self.panel_settings.setLayout(self.panel_layout_settings)
-        self.panel_settings.setVisible(False)
         
-        main_layout.insertWidget(1, self.panel_settings)
+        
+        
         
         # add to panel layout settings
-        self.systems = SytemsClass()
-        self.second_panel_layout_settings.addWidget(self.systems.scroll_area)
-        self.second_panel_layout_settings.addWidget(self.systems.scroll_area_config)
+        self.systems = SytemsClass(self.publish)
+        main_layout.insertWidget(1, self.systems.panel_settings)
+        
         
         #Widgets
         self.status_label = QLabel("Getrennt")
@@ -120,8 +114,8 @@ class MainWindow(QMainWindow):
             self.toggle_button.setText("↓ send messages")
 
     def toggle_settings(self):
-        visible = self.panel_settings.isVisible()
-        self.panel_settings.setVisible(not visible)
+        visible = self.systems.panel_settings.isVisible()
+        self.systems.panel_settings.setVisible(not visible)
         if visible:
             self.settings_button.setText("→ settings")
         else:
@@ -138,7 +132,7 @@ async def main(app):
     comps = component_handler.Comps()
     # create socket for messages
     socket = amqtt_test.SocketMqtt(ip="localhost",port=1883, process=comps)
-    window = MainWindow()
+    window = MainWindow(socket.send)
     # set component area for dynamic insert
     comps.set_comp_area(window.component_scroll_area_layout)
     # set function for sending data through socket
