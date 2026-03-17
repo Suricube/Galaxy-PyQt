@@ -99,7 +99,7 @@ class SytemsClass(QWidget):
         with open("assets/get_capabilities.json", "r") as f:
             msg = json.loads(f.read())
             f.close()
-            msg["name"] = "systems"
+            msg["type"] = "systems"
         self.send(json.dumps(msg))
 
     def return_pressed_wasm(self):
