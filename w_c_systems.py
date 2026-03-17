@@ -99,7 +99,7 @@ class SytemsClass(QWidget):
         with open("assets/get_capabilities.json", "r") as f:
             msg = json.loads(f.read())
             f.close()
-            msg["type"] = "systems"
+            msg["type"] = "manager"
         self.send(json.dumps(msg))
 
     def return_pressed_wasm(self):
@@ -184,7 +184,7 @@ class SytemsClass(QWidget):
         
         #self.msg_to_apply = msg
         self.actor_name_id.clear()
-        self.send(str(msg))
+        self.send(json.dumps(msg))
 
     def send(self, msg: str):
         loop = asyncio.get_event_loop()
