@@ -23,10 +23,11 @@ class Component(QWidget):
         self.setSizePolicy(QSizePolicy.Policy.Maximum, QSizePolicy.Policy.Maximum)
 
         self.setMaximumWidth(300)
+        self.setMaximumHeight(900)
 
         #top row widgets
         self.componenet_lable = QLabel(name)
-        self.comp_button = QPushButton("⮕")
+        self.comp_button = QPushButton("+")
         self.comp_button.setStyleSheet("""
                                         QPushButton {
                                         background-color: transparent;
@@ -62,9 +63,9 @@ class Component(QWidget):
         visible = self.panel.isVisible()
         self.panel.setVisible(not visible)
         if visible:
-            self.comp_button.setText("⮕")
+            self.comp_button.setText("+")
         else:
-            self.comp_button.setText("⬇")  
+            self.comp_button.setText("-")  
 
     def request_config(self):
         msg =    { "type":"component",

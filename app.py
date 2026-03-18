@@ -11,17 +11,17 @@ from PyQt6.QtWidgets import (
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QSizePolicy
 from w_c_systems import SytemsClass
-
+from signal import SIGINT, SIGTERM
 import component_handler
 import amqtt_test
 
 class MainWindow(QMainWindow):
-    def __init__(self, publish):
+    def __init__(self, socket):
         super().__init__()
         self.resize(1200, 700)
         #self.setWindowFlags(Qt.WindowType.FramelessWindowHint)
         self.setWindowTitle("Galaxy Controller")
-        self.publish = publish
+        self.socket = socket
         #Layouts
         main_layout = QVBoxLayout()
         main_second_layout = QHBoxLayout()
@@ -47,13 +47,16 @@ class MainWindow(QMainWindow):
 
     
         # add to panel layout settings
-        self.systems = SytemsClass(self.publish)
+        self.systems = SytemsClass(self.socket.send)
         main_layout.insertWidget(1, self.systems.panel_settings)
 
         #top bar
         self.top_bar_connect = QPushButton("connect")
+        self.top_bar_connect.clicked.connect(self.top_bar_connect_funktion)
         top_bar_layout.addWidget(self.top_bar_connect)
         top_bar_layout.addWidget(self.systems.settings_button)
+
+        
         
         
         #Widgets
@@ -95,10 +98,21 @@ class MainWindow(QMainWindow):
         left_main_layout.addStretch()       #layout formatierung
         right_main_layout.addStretch() 
 
-    
+    def top_bar_connect_funktion(self):
+        self.socket.set_connect_status(self.status)
+        asyncio.create_task(self.socket.connect())
+
     def on_send_clicked(self, line_edit, name):
         loop = asyncio.get_event_loop()
         loop.create_task(self.publish_message(line_edit, name))
+    
+    def status(self, msg: str):
+        self.status_label.setText(msg)
+
+    @asyncClose
+    async def closeEvent(self, event):
+        pass
+
 
 async def main(app):
     app_close_event = asyncio.Event()
@@ -107,13 +121,15 @@ async def main(app):
     comps = component_handler.Comps()
     # create socket for messages
     socket = amqtt_test.SocketMqtt(ip="localhost",port=1883, process=comps)
-    window = MainWindow(socket.send)
+    window = MainWindow(socket)
+    #socket.set_connect_status(window.status)
     # set component area for dynamic insert
     comps.set_comp_area(window.component_scroll_area_layout)
     # set function for sending data through socket
     comps.set_socket_send(socket.send)
+    #task = asyncio.create_task(socket.connect())
     window.show()
-    await socket.connect()
+    await app_close_event.wait()
 
 if __name__ == "__main__":
 

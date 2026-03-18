@@ -1,6 +1,7 @@
 import asyncio
 import logging
 
+from amqtt.errors import AMQTTError
 from amqtt.client import ClientError, MQTTClient
 from amqtt.mqtt.constants import QOS_1, QOS_2
 from component_interface import ProcessMessage
@@ -28,10 +29,11 @@ class SocketMqtt(SocketC):
     def __init__(self, ip, port, process):
         super().__init__(ip=ip, port=port, process=process)
         self.client = MQTTClient(config={"auto_reconnect": False})
+        self.status = None
     async def connect(self):
         await self.client.connect('mqtt://127.0.0.1:1883/')
 #        await self.client.connect(f"mqtt://{self.ip}:{self.port}/")
-
+        self.send_status("connected")
         await self.client.subscribe(
             [
                 ("mock", QOS_1),
@@ -40,6 +42,7 @@ class SocketMqtt(SocketC):
         file = open("messages/capabilities.json","r")
         msg = file.read()
         file.close()
+        self.send_status("subscribed")
         await self.send("ui",msg)
         #await self.send("ui","test message")
         logger.info("Subscribed")
@@ -50,14 +53,24 @@ class SocketMqtt(SocketC):
                     self.process.process(msg.data.decode())
 
         except ClientError:
+            self.send_status("Error")
             logger.exception("Client exception")
             await self.client.unsubscribe(["mock"])
             logger.info("UnSubscribed")
             await self.client.disconnect()
+        except AMQTTError:
+            self.send_status("Error")
 
     async def send(self, topic:str, msg: str):
         print(msg)
         await self.client.publish('ui', msg.encode(), qos=QOS_1)
+    def send_status(self, msg: str):
+        if self.status != None:
+            self.status(msg)
+
+    def set_connect_status(self, status):
+        self.status = status
+        
 
 
 def __main__():
